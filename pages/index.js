@@ -4,7 +4,31 @@ import { Fragment } from "react";
 
 import MeetupList from "./../components/meetups/MeetupList";
 
-function HomePage(props) {
+
+export async function getStaticProps() {
+  const client = await MongoClient.connect(process.env.MONGODB_URI );
+  const db = client.db();
+  const meetupsCollection = db.collection("meetups");
+  const meetups = await meetupsCollection.find().toArray();
+  client.close();
+
+  return {
+    props: {
+      meetups: meetups.map((meetup) => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString(),
+      })),
+    },
+    revalidate: 10,
+  };
+}
+
+
+
+
+const HomePage = (props) => {
   return (
     <Fragment>
       <Head>
@@ -30,33 +54,5 @@ function HomePage(props) {
 //     },
 //   };
 // }
-
-export async function getStaticProps() {
-  //fetch data from an API
-
-  const client = await MongoClient.connect(
-    "mongodb+srv://tester:1234@cluster0.fyd7hrj.mongodb.net/meetups?retryWrites=true&w=majority"
-  );
-
-  const db = client.db();
-
-  const meetupsCollection = db.collection("meetups");
-
-  const meetups = await meetupsCollection.find().toArray();
-
-  client.close();
-
-  return {
-    props: {
-      meetups: meetups.map((meetup) => ({
-        title: meetup.title,
-        address: meetup.address,
-        image: meetup.image,
-        id: meetup._id.toString(),
-      })),
-    },
-    revalidate: 10,
-  };
-}
 
 export default HomePage;
