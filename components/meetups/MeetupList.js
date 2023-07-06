@@ -1,5 +1,7 @@
-import MeetupItem from './MeetupItem';
-import classes from './MeetupList.module.css';
+// components/meetups/MeetupList.js
+
+import MeetupItem from "./MeetupItem";
+import classes from "./MeetupList.module.css";
 
 function MeetupList(props) {
   return (
@@ -8,9 +10,13 @@ function MeetupList(props) {
         <MeetupItem
           key={meetup.id}
           id={meetup.id}
-          image={meetup.image}
-          title={meetup.title}
-          address={meetup.address}
+          imageurl={meetup.imageurl}
+          name={meetup.name}
+          price={meetup.price}
+          stock={meetup.stock}
+          description={meetup.description}
+          createdAt={meetup.createdAt}
+          category={meetup.category} // 오타 수정: cateogry -> category
         />
       ))}
     </ul>
